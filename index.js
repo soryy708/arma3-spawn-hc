@@ -62,13 +62,15 @@ function startClient(identifier, options, logsPath) {
         await util.promisify(fs.mkdir)(config.logsPath, { recursive: true });
     }
     for (let i = 0; i < config.clientCount; ++i) {
-        startClient(`client${i+1}`, {
-            game: 'arma3',
-            host: config.host,
-            password: config.password,
-            port: config.port,
-            mods: config.modFile ? getModPaths(getModIds(await getModsXml(await getModsHtml(path.join(config.modFile)))), armaModsPath) : [],
-            path: armaPath,
-        }, config.logsPath);
+        setTimeout(async () => {
+            startClient(`client${i+1}`, {
+                game: 'arma3',
+                host: config.host,
+                password: config.password,
+                port: config.port,
+                mods: config.modFile ? getModPaths(getModIds(await getModsXml(await getModsHtml(path.join(config.modFile)))), armaModsPath) : [],
+                path: armaPath,
+            }, config.logsPath);
+        }, i * config.spawnDelay);
     }
 })();
